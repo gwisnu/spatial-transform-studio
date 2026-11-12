@@ -1,5 +1,5 @@
 import { BasemapStyle, SpatialLayer } from '../types/spatial';
-import { Layers, Plus, Map, Globe, Moon, Mountain, Wand2 } from 'lucide-react';
+import { Layers, Plus, Map, Globe, Moon, Mountain, Wand2, Calculator } from 'lucide-react';
 
 interface HeaderProps {
   layers: SpatialLayer[];
@@ -7,6 +7,7 @@ interface HeaderProps {
   onChangeBasemap: (style: BasemapStyle) => void;
   onOpenUpload: () => void;
   onOpenGeoprocessing: () => void;
+  onOpenCoordTransform: () => void;
   isTableCollapsed: boolean;
   onToggleTable: () => void;
   isLayerPanelVisible: boolean;
@@ -19,6 +20,7 @@ export const Header: React.FC<HeaderProps> = ({
   onChangeBasemap,
   onOpenUpload,
   onOpenGeoprocessing,
+  onOpenCoordTransform,
   isTableCollapsed,
   onToggleTable,
   isLayerPanelVisible,
@@ -33,10 +35,10 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
         <div className="leading-tight">
           <span className="text-sm font-bold tracking-tight text-slate-100 whitespace-nowrap block">
-            SpatialTransform Studio
+            Spatial Data Conversion 
           </span>
           <span className="text-[10px] text-slate-400 font-mono block">
-            MapLibre · WGS84 · UTM 50S · Tutupan
+            Convert data format and coordinate system
           </span>
         </div>
       </div>
@@ -106,6 +108,16 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <Wand2 className="w-3.5 h-3.5 text-emerald-400" />
           <span>Geoprocessing</span>
+        </button>
+
+        {/* Dedicated Coordinate Transformation Tool */}
+        <button
+          onClick={onOpenCoordTransform}
+          className="px-3 py-1.5 rounded-lg border border-slate-800 hover:border-emerald-500/40 bg-slate-900 text-slate-300 hover:text-emerald-300 text-xs transition-colors whitespace-nowrap flex items-center gap-1.5 shadow-sm"
+          title="Open Batch 2D / 3D Coordinate Transformation Tools (Tutupan, UTM 50S, WGS 84)"
+        >
+          <Calculator className="w-3.5 h-3.5 text-emerald-400" />
+          <span>Coord Transform</span>
         </button>
 
         {/* Toggle Layer Panel (Table of Contents) */}

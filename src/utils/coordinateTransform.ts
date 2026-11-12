@@ -76,6 +76,84 @@ export function ttp2Geo(easting: number, northing: number): [number, number] {
   return [lon, lat];
 }
 
+// Calibrated Tutupan Site 3D Parameters (Inclined Plane Adjustment)
+export const TUTUPAN_3D_PARAMS = {
+  ...TUTUPAN_PARAMS,
+  originEasting: -119.715,
+  originNorthing: 5543.114,
+  slopeEasting: 11.395,
+  slopeNorthing: -30.227,
+  zOffset: 19.191,
+};
+
+/**
+ * Calculate the inclined plane elevation adjustment dz for Tutupan Local Grid:
+ * dz = ((northing - originNorthing) * -slopeNorthing / 1000000) +
+ *      ((easting - originEasting) * -slopeEasting / 1000000) + 19.191
+ *
+ * z_utm = z_ttp + dz
+ * z_ttp = z_utm - dz
+ */
+export function calcTutupanElevationAdjustment(easting: number, northing: number): number {
+  const { originEasting, originNorthing, slopeEasting, slopeNorthing, zOffset } = TUTUPAN_3D_PARAMS;
+  const dZNorthing = ((northing - originNorthing) * (-slopeNorthing)) / 1000000;
+  const dZEasting = ((easting - originEasting) * (-slopeEasting)) / 1000000;
+  return dZNorthing + dZEasting + zOffset;
+}
+
+/**
+ * Convert Tutupan 3D (Easting, Northing, Elevation) to UTM 50S (Easting, Northing, Elevation)
+ */
+export function ttp2Utm50s3D(
+  easting: number,
+  northing: number,
+  elevation: number
+): [number, number, number] {
+  const [x3, y3] = ttp2Utm50s(easting, northing);
+  const dz = calcTutupanElevationAdjustment(easting, northing);
+  const z1 = elevation + dz;
+  return [x3, y3, z1];
+}
+
+/**
+ * Convert UTM 50S 3D (Easting, Northing, Elevation) to Tutupan 3D (Easting, Northing, Elevation)
+ */
+export function utm50s2Ttp3D(
+  x3: number,
+  y3: number,
+  elevation: number
+): [number, number, number] {
+  const [easting, northing] = utm50s2Ttp(x3, y3);
+  const dz = calcTutupanElevationAdjustment(easting, northing);
+  const z1 = elevation - dz;
+  return [easting, northing, z1];
+}
+
+/**
+ * Convert Tutupan 3D to WGS84 Geographic 3D [lon, lat, elevation]
+ */
+export function ttp2Geo3D(
+  easting: number,
+  northing: number,
+  elevation: number
+): [number, number, number] {
+  const [x3, y3, z1] = ttp2Utm50s3D(easting, northing, elevation);
+  const [lon, lat] = proj4('EPSG:32750', 'EPSG:4326', [x3, y3]);
+  return [lon, lat, z1];
+}
+
+/**
+ * Convert WGS84 Geographic 3D [lon, lat, elevation] to Tutupan 3D
+ */
+export function geo2Ttp3D(
+  lon: number,
+  lat: number,
+  elevation: number
+): [number, number, number] {
+  const [x3, y3] = proj4('EPSG:4326', 'EPSG:32750', [lon, lat]);
+  return utm50s2Ttp3D(x3, y3, elevation);
+}
+
 /**
  * Convert WGS84 Geographic [Longitude, Latitude] to Tutupan Local Grid (Easting, Northing)
  */
@@ -83,6 +161,57 @@ export function geo2Ttp(lon: number, lat: number): [number, number] {
   // WGS84 to UTM 50S
   const [x3, y3] = proj4('EPSG:4326', 'EPSG:32750', [lon, lat]);
   return utm50s2Ttp(x3, y3);
+}
+
+/**
+ * Generalized 2D or 3D coordinate transformation between any supported CRS
+ * (EPSG:4326, EPSG:32750, TUTUPAN).
+ * If is3D is true, applies Tutupan inclined plane elevation transformation when converting
+ * from or to TUTUPAN.
+ */
+export function transformCoordinate3D(
+  coords: [number, number, number],
+  fromCRS: CRS,
+  toCRS: CRS,
+  is3D: boolean = false
+): [number, number, number] {
+  const [x, y, z] = coords;
+  if (fromCRS === toCRS) {
+    return [x, y, z];
+  }
+
+  if (!is3D) {
+    const [tx, ty] = transformCoordinate([x, y], fromCRS, toCRS);
+    return [tx, ty, z];
+  }
+
+  // 3D Transformation with Inclined Plane Adjustment
+  if (fromCRS === 'TUTUPAN' && toCRS === 'EPSG:32750') {
+    return ttp2Utm50s3D(x, y, z);
+  }
+  if (fromCRS === 'EPSG:32750' && toCRS === 'TUTUPAN') {
+    return utm50s2Ttp3D(x, y, z);
+  }
+  if (fromCRS === 'TUTUPAN' && toCRS === 'EPSG:4326') {
+    return ttp2Geo3D(x, y, z);
+  }
+  if (fromCRS === 'EPSG:4326' && toCRS === 'TUTUPAN') {
+    return geo2Ttp3D(x, y, z);
+  }
+
+  // Between EPSG:4326 and EPSG:32750 (horizontal reprojection, elevation preserved)
+  if (fromCRS === 'EPSG:4326' && toCRS === 'EPSG:32750') {
+    const [utmX, utmY] = proj4('EPSG:4326', 'EPSG:32750', [x, y]);
+    return [utmX, utmY, z];
+  }
+  if (fromCRS === 'EPSG:32750' && toCRS === 'EPSG:4326') {
+    const [lon, lat] = proj4('EPSG:32750', 'EPSG:4326', [x, y]);
+    return [lon, lat, z];
+  }
+
+  // Fallback
+  const [tx, ty] = transformCoordinate([x, y], fromCRS, toCRS);
+  return [tx, ty, z];
 }
 
 /**

@@ -8,6 +8,7 @@ import { AttributeTable } from './components/AttributeTable';
 import { UploadModal } from './components/UploadModal';
 import { ExportModal } from './components/ExportModal';
 import { GeoprocessingModal } from './components/GeoprocessingModal';
+import { CoordTransformModal } from './components/CoordTransformModal';
 
 export default function App() {
   const [layers, setLayers] = useState<SpatialLayer[]>([]);
@@ -16,6 +17,7 @@ export default function App() {
   const [basemap, setBasemap] = useState<BasemapStyle>('satellite');
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isGeoprocessingOpen, setIsGeoprocessingOpen] = useState(false);
+  const [isCoordTransformOpen, setIsCoordTransformOpen] = useState(false);
   const [isTableCollapsed, setIsTableCollapsed] = useState(false);
   const [isLayerPanelVisible, setIsLayerPanelVisible] = useState(true);
   const [exportModalLayer, setExportModalLayer] = useState<SpatialLayer | null>(null);
@@ -142,6 +144,7 @@ export default function App() {
         onChangeBasemap={setBasemap}
         onOpenUpload={() => setIsUploadOpen(true)}
         onOpenGeoprocessing={() => setIsGeoprocessingOpen(true)}
+        onOpenCoordTransform={() => setIsCoordTransformOpen(true)}
         isTableCollapsed={isTableCollapsed}
         onToggleTable={() => setIsTableCollapsed(!isTableCollapsed)}
         isLayerPanelVisible={isLayerPanelVisible}
@@ -161,6 +164,7 @@ export default function App() {
           onFitBounds={handleFitBounds}
           onOpenUpload={() => setIsUploadOpen(true)}
           onQuickExport={(layer) => setExportModalLayer(layer)}
+          onOpenCoordTransform={() => setIsCoordTransformOpen(true)}
           isCollapsed={!isLayerPanelVisible}
           onToggleCollapse={() => setIsLayerPanelVisible((v) => !v)}
         />
@@ -259,6 +263,13 @@ export default function App() {
       <ExportModal
         layer={exportModalLayer}
         onClose={() => setExportModalLayer(null)}
+      />
+
+      {/* Batch 2D / 3D Coordinate Transformation Tool Modal */}
+      <CoordTransformModal
+        isOpen={isCoordTransformOpen}
+        onClose={() => setIsCoordTransformOpen(false)}
+        onImportLayer={handleAddLayer}
       />
     </div>
   );

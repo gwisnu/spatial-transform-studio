@@ -65,18 +65,18 @@ const BASEMAP_STYLES: Record<BasemapStyle, any> = {
   dark: {
     version: 8,
     sources: {
-      'carto-dark': {
+      'ortho': {
         type: 'raster',
-        tiles: ['https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}@2x.png'],
+        tiles: ['http://10.165.1.14:9090/service?layer=basemap-image&style=&tilematrixset=grid_merc&Service=WMTS&Request=GetTile&Version=1.3.0&Format=png&TileMatrix={z}&TileCol={x}&TileRow={y}'],
         tileSize: 256,
-        attribution: '© CARTO, © OpenStreetMap contributors',
+        attribution: '',
       },
     },
     layers: [
       {
         id: 'carto-dark-layer',
         type: 'raster',
-        source: 'carto-dark',
+        source: 'ortho',
         minzoom: 0,
         maxzoom: 20,
       },

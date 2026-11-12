@@ -36,6 +36,7 @@ interface LayerSidebarProps {
   onFitBounds: (bounds: [number, number, number, number]) => void;
   onOpenUpload: () => void;
   onQuickExport: (layer: SpatialLayer) => void;
+  onOpenCoordTransform?: () => void;
   isCollapsed?: boolean;
   onToggleCollapse?: () => void;
 }
@@ -50,6 +51,7 @@ export const LayerSidebar: React.FC<LayerSidebarProps> = ({
   onFitBounds,
   onOpenUpload,
   onQuickExport,
+  onOpenCoordTransform,
   isCollapsed = false,
   onToggleCollapse,
 }) => {
@@ -440,6 +442,17 @@ export const LayerSidebar: React.FC<LayerSidebarProps> = ({
             <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
               Test site calibration and transform between Tutupan Grid, UTM Zone 50S, and WGS84 coordinates.
             </p>
+
+            {onOpenCoordTransform && (
+              <button
+                type="button"
+                onClick={onOpenCoordTransform}
+                className="w-full mt-3 py-2 px-3 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-sm"
+              >
+                <Calculator className="w-3.5 h-3.5" />
+                <span>Open Batch 2D/3D Transformer</span>
+              </button>
+            )}
           </div>
 
           <div className="space-y-3">

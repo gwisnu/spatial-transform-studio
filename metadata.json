@@ -1,0 +1,6 @@
+{
+  "name": "SpatialTransform Studio",
+  "description": "High-performance geospatial data transformation, MapLibre visualization, attribute table editing, and multi-format export for WGS84, UTM 50S, and Tutupan Local CRS.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

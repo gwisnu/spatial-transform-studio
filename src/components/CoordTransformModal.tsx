@@ -757,7 +757,7 @@ export const CoordTransformModal: React.FC<CoordTransformModalProps> = ({
                       }}
                       className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 font-mono focus:outline-none focus:border-emerald-500"
                     >
-                      <option value="TUTUPAN">Local Coordinate System (Tutupan Mine Grid)</option>
+                      <option value="TUTUPAN">Local Coordinate System (Tutupan Grid)</option>
                       <option value="EPSG:32750">EPSG:32750 (WGS 84 / UTM zone 50S)</option>
                       <option value="EPSG:4326">EPSG:4326 (WGS 84 Geographic Lat/Lon)</option>
                     </select>
@@ -788,7 +788,7 @@ export const CoordTransformModal: React.FC<CoordTransformModalProps> = ({
                       className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 font-mono focus:outline-none focus:border-emerald-500"
                     >
                       <option value="EPSG:32750">EPSG:32750 (WGS 84 / UTM zone 50S)</option>
-                      <option value="TUTUPAN">Local Coordinate System (Tutupan Mine Grid)</option>
+                      <option value="TUTUPAN">Local Coordinate System (Tutupan Grid)</option>
                       <option value="EPSG:4326">EPSG:4326 (WGS 84 Geographic Lat/Lon)</option>
                     </select>
                   </div>
@@ -839,10 +839,7 @@ export const CoordTransformModal: React.FC<CoordTransformModalProps> = ({
                     <div className="p-2.5 rounded-lg bg-emerald-500/5 border border-emerald-500/20 text-[11px] text-emerald-300/90 leading-relaxed space-y-1">
                       <div className="font-semibold flex items-center gap-1 text-emerald-400">
                         <Info className="w-3.5 h-3.5" />
-                        <span>Tutupan Inclined Plane Formula Active:</span>
-                      </div>
-                      <div className="font-mono text-[10px] text-slate-300">
-                        dZ = ((N - 5543.114) × 30.227/10⁶) + ((E + 119.715) × -11.395/10⁶) + 19.191
+                        <span>Inclined Plane Formula Active</span>
                       </div>
                     </div>
                   ) : !is3DEligible ? (

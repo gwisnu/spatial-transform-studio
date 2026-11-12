@@ -735,9 +735,6 @@ export const UploadModal: React.FC<UploadModalProps> = ({
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>Site Calibration Tutupan Active</span>
                 </div>
-                <p className="text-[10px] text-emerald-300/80 leading-relaxed font-sans">
-                  Formula active: rot=-57.26°, dx=-330718.74m, dy=-9748020.01m, sf=1.00008025, inverse UTM 50S projection to WGS84 for MapLibre rendering.
-                </p>
               </div>
             )}
           </div>

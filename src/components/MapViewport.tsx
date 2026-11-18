@@ -62,7 +62,7 @@ const BASEMAP_STYLES: Record<BasemapStyle, any> = {
       },
     ],
   },
-  dark: {
+  ortho: {
     version: 8,
     sources: {
       'ortho': {
@@ -74,7 +74,7 @@ const BASEMAP_STYLES: Record<BasemapStyle, any> = {
     },
     layers: [
       {
-        id: 'carto-dark-layer',
+        id: 'ortho-layer',
         type: 'raster',
         source: 'ortho',
         minzoom: 0,

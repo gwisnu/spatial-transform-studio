@@ -1,5 +1,5 @@
 import { BasemapStyle, SpatialLayer } from '../types/spatial';
-import { Layers, Plus, Map, Globe, Moon, Mountain, Wand2, Calculator } from 'lucide-react';
+import { Layers, Plus, Map, Globe, Drone, Mountain, Wand2, Calculator } from 'lucide-react';
 
 interface HeaderProps {
   layers: SpatialLayer[];
@@ -61,16 +61,16 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           <button
-            onClick={() => onChangeBasemap('dark')}
+            onClick={() => onChangeBasemap('ortho')}
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs transition-colors whitespace-nowrap ${
-              basemap === 'dark'
+              basemap === 'ortho'
                 ? 'bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/40'
                 : 'text-slate-400 hover:text-slate-200'
             }`}
             title="Dark Cartography"
           >
-            <Moon className="w-3.5 h-3.5" />
-            <span>Dark</span>
+            <Drone className="w-3.5 h-3.5" />
+            <span>Orthophoto</span>
           </button>
 
           <button
@@ -117,7 +117,7 @@ export const Header: React.FC<HeaderProps> = ({
           title="Open Batch 2D / 3D Coordinate Transformation Tools (Tutupan, UTM 50S, WGS 84)"
         >
           <Calculator className="w-3.5 h-3.5 text-emerald-400" />
-          <span>Coord Transform</span>
+          <span>Coordinate Transform</span>
         </button>
 
         {/* Toggle Layer Panel (Table of Contents) */}
